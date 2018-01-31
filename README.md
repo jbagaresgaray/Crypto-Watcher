@@ -2,28 +2,10 @@
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+### Historical Data (Graph) ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Coming Soon
 
-### How do I get set up? ###
+### Favorites Notification ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Coming Soon
