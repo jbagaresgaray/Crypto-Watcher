@@ -9,4 +9,61 @@ page-home {
   .richblue {
     background-color: color($colors, richblue);
   }
+
+  .hero {
+    background-size: cover !important;
+    color: #fff !important;
+    height: 200px !important;
+    position: relative !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  .hero.no-header {
+    height: 244px !important;
+  }
+  .hero>.content {
+    bottom: 0 !important;
+    position: absolute !important;
+    text-align: center !important;
+    width: 100% !important;
+    z-index: 1 !important;
+  }
+  .hero>.content>.avatar {
+    background-position: center !important;
+    background-size: cover !important;
+    display: inline-block !important;
+    height: 88px !important;
+    left: auto !important;
+    margin-bottom: 10px !important;
+    position: relative !important;
+    width: 88px !important;
+  }
+  .hero h1 .hero h2,
+  .hero h3,
+  .hero h4,
+  .hero h5,
+  .hero h6 {
+    color: #fff !important;
+    margin: 0 !important;
+  }
+  .hero h4 {
+    color: #fff !important;
+    margin: 3px 0 16px !important;
+  }
+  .hero h1>a,
+  .hero h2>a,
+  .hero h3>a,
+  .hero h4>a,
+  .hero h5>a,
+  .hero h6>a {
+    text-decoration: none !important;
+  }
+  .hero h1.title {
+    color: #fff !important;
+    font-size: 23px !important;
+    margin: 0 !important;
+    text-align: left !important;
+    padding-left: 80px !important;
+    line-height: 59px !important;
+  }
 }

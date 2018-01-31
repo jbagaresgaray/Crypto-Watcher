@@ -18,7 +18,8 @@
   <ion-card *ngFor="let item of tickerArr">
     <ion-item (click)="gotoDetails(item)">
       <ion-avatar item-start>
-        <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'">
+        <!-- <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'"> -->
+        <img src="https://files.coinmarketcap.com/static/img/coins/64x64/{{item.id}}.png" onError="this.src='./assets/imgs/ionic.png'">
       </ion-avatar>
       <h2>{{item.name}} <small>({{item.symbol}})</small></h2>
       <p> <strong>{{item.price_usd | currency:'USD'}}</strong></p>
@@ -32,6 +33,6 @@
       <ion-icon ios="md-arrow-round-down" md="md-arrow-round-down" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
     </ion-item>
     <!-- <img src="./assets/imgs/advance-card-map-mario.png"> -->
-    <canvas #lineCanvas></canvas>
+    <canvas baseChart [data]="item.price_data" [labels]="item.price_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
   </ion-card>
 </ion-content>

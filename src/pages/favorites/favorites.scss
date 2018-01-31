@@ -12,5 +12,8 @@ page-favorites {
 
   ion-card {
     border-radius: 6px !important;
+    canvas {
+      padding: 10px;
+    }
   }
 }

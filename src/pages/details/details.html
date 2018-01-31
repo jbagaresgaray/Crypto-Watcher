@@ -20,7 +20,8 @@
   </ion-refresher>
   <ion-card class="info">
     <div text-center>
-      <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'">
+      <!-- <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'"> -->
+      <img src="https://files.coinmarketcap.com/static/img/coins/64x64/{{item.id}}.png" onError="this.src='./assets/imgs/ionic.png'">
     </div>
     <div class="card-title">{{item.name}}</div>
     <div class="card-subtitle">{{item.symbol}}</div>
@@ -100,7 +101,7 @@
       Price
     </ion-card-header>
     <ion-card-content>
-      <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      <canvas baseChart [data]="price_data" [labels]="price_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
     </ion-card-content>
   </ion-card>
   <ion-card *ngIf="showGraph">
@@ -108,7 +109,7 @@
       Market Cap
     </ion-card-header>
     <ion-card-content>
-      <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      <canvas baseChart [data]="marketcap_data" [labels]="marketcap_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
     </ion-card-content>
   </ion-card>
   <ion-card *ngIf="showGraph">
@@ -116,7 +117,7 @@
       Volume
     </ion-card-header>
     <ion-card-content>
-      <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+      <canvas baseChart [data]="volume_data" [labels]="volume_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -15,7 +15,8 @@ export class HomePage {
 	tickerArr: any[] = [];
 	tickerArrCopy: any[] = [];
 	favorites: any[] = [];
-	actions:string = 'top';
+	actions: string = 'top';
+	global:any = {};
 
 	constructor(public navCtrl: NavController, public DataFactory: ServiceProvider, public loadingCtrl: LoadingController, public storage: Storage, public alertCtrl: AlertController) {
 		storage.get('favorites').then((val) => {
@@ -28,7 +29,8 @@ export class HomePage {
 	ionViewDidLoad() {
 		let loading = this.loadingCtrl.create();
 		loading.present();
-		this.DataFactory.getAllTicker().then((data: any) => {
+
+		let successResponse = (data: any) => {
 			if (!_.isEmpty(data)) {
 				_.each(data, (row: any) => {
 					row.img = './assets/icon/' + row.symbol + '.png'
@@ -36,15 +38,20 @@ export class HomePage {
 				this.tickerArr = data;
 				this.tickerArrCopy = data;
 			}
-		}, (error) => {
+		};
+
+		let errorResponse = (error) => {
 			// loading.dismiss();
-		}).then(() => {
+			console.log('error: ', error);
+		}
+
+		this.DataFactory.getAllTicker(null, null, 50).then(successResponse, errorResponse).then(() => {
 			loading.dismiss();
 		});
 	}
 
 	doRefresh(refresher) {
-		this.DataFactory.getAllTicker().then((data: any) => {
+		let successResponse = (data: any) => {
 			if (!_.isEmpty(data)) {
 				_.each(data, (row: any) => {
 					row.img = './assets/icon/' + row.symbol + '.png'
@@ -52,11 +59,22 @@ export class HomePage {
 				this.tickerArr = data;
 				this.tickerArrCopy = data;
 			}
-		}, (error) => {
-			refresher.complete();
-		}).then(() => {
-			refresher.complete();
-		});
+		};
+
+		let errorResponse = (error) => {
+			// loading.dismiss();
+			console.log('error: ', error);
+		}
+
+		if (this.actions === 'top') {
+			this.DataFactory.getAllTicker(null, null, 50).then(successResponse, errorResponse).then(() => {
+				refresher.complete();
+			});
+		} else if (this.actions === 'full') {
+			this.DataFactory.getAllTicker().then(successResponse, errorResponse).then(() => {
+				refresher.complete();
+			});
+		}
 	}
 
 	getItems(ev: any) {
@@ -78,7 +96,7 @@ export class HomePage {
 	}
 
 	addToFav(item) {
-		console.log('addToFav: ',item);
+		console.log('addToFav: ', item);
 		let res = _.find(this.favorites, { id: item.id });
 		if (res) {
 			let alert = this.alertCtrl.create({
@@ -101,7 +119,42 @@ export class HomePage {
 		alert.present();
 	}
 
-	segmentChanged(ev){
-		
+	segmentChanged(ev) {
+		let loading = this.loadingCtrl.create();
+		loading.present();
+
+		let successResponse = (data: any) => {
+			if (!_.isEmpty(data)) {
+				_.each(data, (row: any) => {
+					row.img = './assets/icon/' + row.symbol + '.png'
+				});
+				this.tickerArr = data;
+				this.tickerArrCopy = data;
+			}
+		};
+
+		let errorResponse = (error) => {
+			// loading.dismiss();
+			console.log('error: ', error);
+		}
+
+		if (ev.value === 'top') {
+			this.DataFactory.getAllTicker(null, null, 50).then(successResponse, errorResponse).then(() => {
+				loading.dismiss();
+			});
+		} else if (ev.value === 'full') {
+			this.DataFactory.getAllTicker().then(successResponse, errorResponse).then(() => {
+				loading.dismiss();
+			});
+		} else {
+			this.DataFactory.getGlobalData().then((data:any)=>{
+				console.log('getGlobalData: ',data);
+				if(!_.isEmpty(data)){
+					this.global = data;
+				}
+			},errorResponse).then(() => {
+				loading.dismiss();
+			});
+		}
 	}
 }
