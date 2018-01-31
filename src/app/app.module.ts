@@ -5,6 +5,7 @@ import { RestangularModule } from 'ngx-restangular/dist/esm/src';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+import { IonicStorageModule } from '@ionic/storage';
 
 import { environment } from '../environments/environment';
 
@@ -22,6 +23,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ServiceProvider } from '../providers/service/service';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+
 
 export function RestangularConfigFactory(RestangularProvider) {
   RestangularProvider.setBaseUrl(environment.api_url);
@@ -47,6 +49,7 @@ export function RestangularConfigFactory(RestangularProvider) {
     }),
     RestangularModule.forRoot(RestangularConfigFactory),
     FormsModule,
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [

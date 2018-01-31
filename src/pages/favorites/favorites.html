@@ -28,9 +28,10 @@
       <ion-note item-end color="danger" *ngIf="item.percent_change_24h < 0">
         <strong>{{item.percent_change_24h}} %</strong>
       </ion-note>
-      <ion-icon ios="md-arrow-dropup" md="md-arrow-dropup" item-end color="secondary" *ngIf="item.percent_change_24h > 0"></ion-icon>
-      <ion-icon ios="md-arrow-dropdown" md="md-arrow-dropdown" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
+      <ion-icon ios="md-arrow-round-up" md="md-arrow-round-up" item-end color="secondary" *ngIf="item.percent_change_24h > 0"></ion-icon>
+      <ion-icon ios="md-arrow-round-down" md="md-arrow-round-down" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
     </ion-item>
-    <img src="./assets/imgs/advance-card-map-mario.png">
+    <!-- <img src="./assets/imgs/advance-card-map-mario.png"> -->
+    <canvas #lineCanvas></canvas>
   </ion-card>
 </ion-content>
