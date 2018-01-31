@@ -42,7 +42,7 @@ export class FavoritesPage {
         this.tickerArrCopy = temp;
       }
     }, (error) => {
-      loading.dismiss();
+      // loading.dismiss();
     }).then(() => {
       loading.dismiss();
 

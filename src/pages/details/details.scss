@@ -4,7 +4,23 @@ page-details {
       font-size: 1.8rem !important;
       font-weight: bold !important;
     }
+    h2{
+      font-size: 1.4rem !important;
+    }
   }
+
+  ion-card.info {
+    padding-top: 10px;
+
+    ion-row{
+      padding-top: 10px;
+    }
+  }
+
+  .borderleft{
+    border-right: solid 1.4px #757373;
+  }
+
   .danger {
     color: #f53d3d !important;
   }
@@ -15,13 +31,48 @@ page-details {
 
   ion-note {
     color: #222 !important;
+    span {
+      color: #757373 !important;
+      font-weight: bold;
+      font-size: 1.4rem;
+    }
   }
-  ion-card{
-  	border: none !important;
-  	box-shadow: none !important;
+
+  ion-card {
+    border: none !important;
+    box-shadow: none !important;
+
+    img {
+      margin: 0 auto;
+      height: auto;
+      width: 70px;
+    }
   }
 
   .richblue {
     background-color: color($colors, richblue);
+  }
+
+  .card-background-page {
+
+    ion-card {
+      position: relative;
+      text-align: center;
+    }
+
+    .card-title {
+      top: 36%;
+      font-size: 2.0em;
+      width: 100%;
+      font-weight: bold;
+      color: #757373;
+    }
+
+    .card-subtitle {
+      font-size: 1.0em;
+      top: 52%;
+      width: 100%;
+      color: #757373;
+    }
   }
 }

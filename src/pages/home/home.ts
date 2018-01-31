@@ -15,6 +15,7 @@ export class HomePage {
 	tickerArr: any[] = [];
 	tickerArrCopy: any[] = [];
 	favorites: any[] = [];
+	actions:string = 'top';
 
 	constructor(public navCtrl: NavController, public DataFactory: ServiceProvider, public loadingCtrl: LoadingController, public storage: Storage, public alertCtrl: AlertController) {
 		storage.get('favorites').then((val) => {
@@ -36,7 +37,7 @@ export class HomePage {
 				this.tickerArrCopy = data;
 			}
 		}, (error) => {
-			loading.dismiss();
+			// loading.dismiss();
 		}).then(() => {
 			loading.dismiss();
 		});
@@ -98,5 +99,9 @@ export class HomePage {
 			buttons: ['OK']
 		});
 		alert.present();
+	}
+
+	segmentChanged(ev){
+		
 	}
 }

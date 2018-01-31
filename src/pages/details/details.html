@@ -8,46 +8,115 @@
         <ion-icon ios="ios-heart-outline" md="ios-heart-outline" color="danger" *ngIf="!isAdded"></ion-icon>
         <ion-icon ios="ios-heart" md="ios-heart" color="danger" *ngIf="isAdded"></ion-icon>
       </button>
+      <button ion-button icon-only>
+        <ion-icon ios="md-open" md="md-open"></ion-icon>
+      </button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content padding-top>
+<ion-content class="card-background-page">
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-item no-lines>
-    <ion-avatar item-start>
-      <img [src]="item.img">
-    </ion-avatar>
-    <h2 class="title">{{item.name}} <small>({{item.symbol}})</small></h2>
-    <p>
-      <strong class="secondary" *ngIf="item.percent_change_24h > 0">{{item.percent_change_24h}} %</strong>
-      <strong class="danger" *ngIf="item.percent_change_24h < 0">{{item.percent_change_24h}} %</strong>
-    </p>
+  <ion-card class="info">
+    <div text-center>
+      <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'">
+    </div>
+    <div class="card-title">{{item.name}}</div>
+    <div class="card-subtitle">{{item.symbol}}</div>
+    <ion-row>
+      <ion-col class="borderleft">
+        <h4>Change 1h</h4>
+        <p>
+          <strong class="secondary" *ngIf="item.percent_change_1h > 0">{{item.percent_change_1h}} %</strong>
+          <strong class="danger" *ngIf="item.percent_change_1h < 0">{{item.percent_change_1h}} %</strong>
+        </p>
+      </ion-col>
+      <ion-col class="borderleft">
+        <h4>Change 24h</h4>
+        <p>
+          <strong class="secondary" *ngIf="item.percent_change_24h > 0">{{item.percent_change_24h}} %</strong>
+          <strong class="danger" *ngIf="item.percent_change_24h < 0">{{item.percent_change_24h}} %</strong>
+        </p>
+      </ion-col>
+      <ion-col center text-center>
+        <h4>Change 7d</h4>
+        <p>
+          <strong class="secondary" *ngIf="item.percent_change_7d > 0">{{item.percent_change_7d}} %</strong>
+          <strong class="danger" *ngIf="item.percent_change_7d < 0">{{item.percent_change_7d}} %</strong>
+        </p>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+  <ion-item no-lines *ngIf="item.market_cap_usd !== null">
+    <h2>Market Cap</h2>
     <ion-note item-end>
-      <strong>{{item.price_usd | currency:'USD'}}</strong>
+      <span>{{item.market_cap_usd | currency:'USD'}}</span>
     </ion-note>
-    <ion-icon ios="md-arrow-round-up" md="md-arrow-round-up" item-end color="secondary" *ngIf="item.percent_change_24h > 0"></ion-icon>
-    <ion-icon ios="md-arrow-round-down" md="md-arrow-round-down" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
   </ion-item>
-  <ion-card>
-    <!-- <img src="./assets/imgs/advance-card-map-mario.png"> -->
-     <canvas #lineCanvas></canvas>
-    <ion-item *ngIf="item.market_cap_usd !== null">
-      <h2>Market Cap</h2>
-      <p>{{item.market_cap_usd | currency:'USD'}}</p>
-    </ion-item>
-    <ion-item *ngIf="item.daily_volume_usd !== null">
-      <h2>Volume (24h)</h2>
-      <p>{{item.daily_volume_usd | currency:'USD'}}</p>
-    </ion-item>
-    <ion-item *ngIf="item.available_supply !== null">
-      <h2>Circulating Supply</h2>
-      <p>{{item.available_supply}} {{item.symbol}}</p>
-    </ion-item>
-    <ion-item *ngIf="item.max_supply !== null">
-      <h2>Max Supply</h2>
-      <p>{{item.max_supply}} {{item.symbol}}</p>
-    </ion-item>
+  <ion-item no-lines *ngIf="item.daily_volume_usd !== null">
+    <h2>Volume (24h)</h2>
+    <ion-note item-end>
+      <span>{{item.daily_volume_usd | currency:'USD'}}</span>
+    </ion-note>
+  </ion-item>
+  <ion-item no-lines *ngIf="item.available_supply !== null">
+    <h2>Circulating Supply</h2>
+    <ion-note item-end>
+      <span>{{item.available_supply}} {{item.symbol}}</span>
+    </ion-note>
+  </ion-item>
+  <ion-item no-lines *ngIf="item.max_supply !== null">
+    <h2>Max Supply</h2>
+    <ion-note item-end><span>{{item.max_supply}} {{item.symbol}}</span></ion-note>
+  </ion-item>
+  <ion-list-header color="aquahaze" *ngIf="showGraph">
+    More Information
+  </ion-list-header>
+  <ion-toolbar padding *ngIf="showGraph">
+    <ion-segment [(ngModel)]="actions" color="richblue" (ionChange)="segmentChanged($event)" mode="md">
+      <ion-segment-button value="/1day">
+        1D
+      </ion-segment-button>
+      <ion-segment-button value="/7day">
+        1W
+      </ion-segment-button>
+      <ion-segment-button value="/30day">
+        1M
+      </ion-segment-button>
+      <ion-segment-button value="/90day">
+        3M
+      </ion-segment-button>
+      <ion-segment-button value="/180day">
+        6M
+      </ion-segment-button>
+      <ion-segment-button value="">
+        All
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-card *ngIf="showGraph">
+    <ion-card-header>
+      Price
+    </ion-card-header>
+    <ion-card-content>
+      <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="showGraph">
+    <ion-card-header>
+      Market Cap
+    </ion-card-header>
+    <ion-card-content>
+      <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="showGraph">
+    <ion-card-header>
+      Volume
+    </ion-card-header>
+    <ion-card-content>
+      <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+    </ion-card-content>
   </ion-card>
 </ion-content>

@@ -4,6 +4,7 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { RestangularModule } from 'ngx-restangular/dist/esm/src';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
 
 import { IonicStorageModule } from '@ionic/storage';
 
@@ -49,7 +50,8 @@ export function RestangularConfigFactory(RestangularProvider) {
     }),
     RestangularModule.forRoot(RestangularConfigFactory),
     FormsModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    ChartsModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

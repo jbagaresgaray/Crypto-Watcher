@@ -6,14 +6,22 @@
     <ion-title>
       Crypto Watcher
     </ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only>
-        <ion-icon name="more"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
   <ion-toolbar color="richblue">
     <ion-searchbar (input)="getItems($event)" showCancelButton="true"></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar color="richblue">
+    <ion-segment [(ngModel)]="actions" color="light" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="top">
+        Top 100
+      </ion-segment-button>
+      <ion-segment-button value="full">
+        Full List
+      </ion-segment-button>
+      <ion-segment-button value="global">
+        Global Info
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
 <ion-content class="richblue">
