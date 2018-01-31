@@ -1,0 +1,27 @@
+page-details {
+  ion-item {
+    h2.title {
+      font-size: 1.8rem !important;
+      font-weight: bold !important;
+    }
+  }
+  .danger {
+    color: #f53d3d !important;
+  }
+
+  .secondary {
+    color: #32db64 !important;
+  }
+
+  ion-note {
+    color: #222 !important;
+  }
+  ion-card{
+  	border: none !important;
+  	box-shadow: none !important;
+  }
+
+  .richblue {
+    background-color: color($colors, richblue);
+  }
+}

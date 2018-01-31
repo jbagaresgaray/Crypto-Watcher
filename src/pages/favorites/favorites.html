@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar color="richblue">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Crypto Watcher
+    </ion-title>
+  </ion-navbar>
+  <ion-toolbar color="richblue">
+    <ion-searchbar (input)="getItems($event)" showCancelButton="true"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="richblue">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-card *ngFor="let item of tickerArr">
+    <ion-item (click)="gotoDetails(item)">
+      <ion-avatar item-start>
+        <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'">
+      </ion-avatar>
+      <h2>{{item.name}} <small>({{item.symbol}})</small></h2>
+      <p> <strong>{{item.price_usd | currency:'USD'}}</strong></p>
+      <ion-note item-end color="secondary" *ngIf="item.percent_change_24h > 0">
+        <strong>{{item.percent_change_24h}} %</strong>
+      </ion-note>
+      <ion-note item-end color="danger" *ngIf="item.percent_change_24h < 0">
+        <strong>{{item.percent_change_24h}} %</strong>
+      </ion-note>
+      <ion-icon ios="md-arrow-dropup" md="md-arrow-dropup" item-end color="secondary" *ngIf="item.percent_change_24h > 0"></ion-icon>
+      <ion-icon ios="md-arrow-dropdown" md="md-arrow-dropdown" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
+    </ion-item>
+    <img src="./assets/imgs/advance-card-map-mario.png">
+  </ion-card>
+</ion-content>

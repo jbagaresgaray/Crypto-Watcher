@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar color="richblue">
+    <ion-title>
+      Analytics
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding-top class="richblue">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-item no-lines>
+    <ion-avatar item-start>
+      <img [src]="item.img">
+    </ion-avatar>
+    <h2 class="title">{{item.name}} <small>({{item.symbol}})</small></h2>
+    <p>
+      <strong class="secondary" *ngIf="item.percent_change_24h > 0">{{item.percent_change_24h}} %</strong>
+      <strong class="danger" *ngIf="item.percent_change_24h < 0">{{item.percent_change_24h}} %</strong>
+    </p>
+    <ion-note item-end>
+      <strong>{{item.price_usd | currency:'USD'}}</strong>
+    </ion-note>
+    <ion-icon ios="md-arrow-round-up" md="md-arrow-round-up" item-end color="secondary" *ngIf="item.percent_change_24h > 0"></ion-icon>
+    <ion-icon ios="md-arrow-round-down" md="md-arrow-round-down" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
+  </ion-item>
+  <ion-card>
+    <img src="./assets/imgs/advance-card-map-mario.png">
+    <ion-item>
+      <h2>Market Cap</h2>
+      <p>{{item.market_cap_usd | currency:'USD'}}</p>
+    </ion-item>
+    <ion-item>
+      <h2>Volume (24h)</h2>
+      <p>{{item.daily_volume_usd | currency:'USD'}}</p>
+    </ion-item>
+    <ion-item>
+      <h2>Circulating Supply</h2>
+      <p>{{item.available_supply}} {{item.symbol}}</p>
+    </ion-item>
+    <ion-item>
+      <h2>Max Supply</h2>
+      <p>{{item.max_supply}} {{item.symbol}}</p>
+    </ion-item>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,16 @@
+page-favorites {
+  .richblue {
+    background-color: color($colors, richblue);
+  }
+
+  ion-item {
+    h2 {
+      font-size: 1.8rem !important;
+      font-weight: bold !important;
+    }
+  }
+
+  ion-card {
+    border-radius: 6px !important;
+  }
+}

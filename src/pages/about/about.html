@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-navbar color="richblue">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      About
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content class="richblue">
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+</ion-content>
