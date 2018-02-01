@@ -31,6 +31,7 @@ export class HomePage {
 		loading.present();
 
 		let successResponse = (data: any) => {
+			console.log('data: ',data);
 			if (!_.isEmpty(data)) {
 				_.each(data, (row: any) => {
 					row.img = './assets/icon/' + row.symbol + '.png'

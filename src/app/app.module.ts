@@ -5,8 +5,9 @@ import { RestangularModule } from 'ngx-restangular/dist/esm/src';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
-
 import { IonicStorageModule } from '@ionic/storage';
+import { HttpClientModule } from '@angular/common/http';
+
 
 import { environment } from '../environments/environment';
 
@@ -24,6 +25,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ServiceProvider } from '../providers/service/service';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { HTTP } from '@ionic-native/http';
 
 
 export function RestangularConfigFactory(RestangularProvider) {
@@ -51,7 +53,8 @@ export function RestangularConfigFactory(RestangularProvider) {
     RestangularModule.forRoot(RestangularConfigFactory),
     FormsModule,
     IonicStorageModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -65,6 +68,7 @@ export function RestangularConfigFactory(RestangularProvider) {
   providers: [
     StatusBar,
     SplashScreen,
+    HTTP,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     ServiceProvider
   ]
