@@ -4,15 +4,7 @@
 
 # Screenshots
 
-!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshot/crypto.jpg)
-!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshot/preview1.jpg)
-
-!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshot/preview2.jpg)
-
-!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshot/preview3.jpg)
-
-!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshot/preview4.jpg)
-!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshot/preview5.jpg)
+!['Crypto-Watcher'](https://raw.githubusercontent.com/jbagaresgaray/Crypto-Watcher/master/screenshots/crypto.png)
 
 ## Downloads
 > Downloads can be found on the [releases page](https://github.com/jbagaresgaray/Crypto-Watcher/releases)
