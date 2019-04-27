@@ -1,11 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
-import * as _ from 'lodash';
-import { Chart } from 'chart.js';
-import { Storage } from '@ionic/storage';
+import { Component, ViewChild } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import {
+  NavController,
+  NavParams,
+  LoadingController,
+  AlertController,
+  Content
+} from "ionic-angular";
+import * as _ from "lodash";
+import { ChartDataSets, ChartOptions } from "chart.js";
+import { Color } from "ng2-charts";
+import { Storage } from "@ionic/storage";
 
-import { ServiceProvider } from '../../providers/service/service';
+import { ServiceProvider } from "../../providers/service/service";
 
 /**
  * Generated class for the GalleryPage page.
@@ -14,17 +21,23 @@ import { ServiceProvider } from '../../providers/service/service';
  * Ionic pages and navigation.
  */
 @Component({
-  selector: 'page-details',
-  templateUrl: 'details.html',
+  selector: "page-details",
+  templateUrl: "details.html"
 })
 export class DetailsPage {
   item: any = {};
-  @ViewChild('lineCanvas') lineCanvas;
+  @ViewChild("lineCanvas") lineCanvas;
+  @ViewChild(Content) content: Content;
+
   lineChart: any;
   favorites: any[] = [];
   isAdded: boolean = false;
   showGraph: boolean = false;
-  actions: string = '/1day';
+  actions: string = "d1";
+  mode: string = "info";
+
+  assetHistory: ChartDataSets[] = [];
+  assetMarkets: any[] = [];
 
   price_data: any[] = [];
   price_labels: any[] = [];
@@ -33,37 +46,49 @@ export class DetailsPage {
   volume_data: any[] = [];
   volume_labels: any[] = [];
 
-  lineChartOptions: any = {
+  lineChartOptions: ChartOptions = {
     responsive: true,
     animation: false,
-    tooltipEvents: [
-      'mousemove',
-      'touchstart',
-      'touchmove'
-    ],
+    tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false
+    },
     elements: {
       point: { radius: 0 },
       line: { fill: false }
     },
     scales: {
-      yAxes: [{ display: true }],
+      yAxes: [{ display: false }],
       xAxes: [{ display: false }]
     }
   };
-  lineChartColors: Array<any> = [{
-    backgroundColor: '#A1ADDC ',
-    borderColor: '#525CAB',
-    pointBackgroundColor: '#525CAB',
-    pointBorderColor: '#fff',
-    pointHoverBackgroundColor: '#fff',
-    pointHoverBorderColor: '#525CAB'
-  }];
+  lineChartColors: Color[] = [
+    {
+      backgroundColor: "#A1ADDC ",
+      borderColor: "#525CAB",
+      pointBackgroundColor: "#525CAB",
+      pointBorderColor: "#fff",
+      pointHoverBackgroundColor: "#fff",
+      pointHoverBorderColor: "#525CAB"
+    }
+  ];
   lineChartLegend: boolean = false;
-  lineChartType: string = 'line';
+  lineChartType: string = "line";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public DataFactory: ServiceProvider, public loadingCtrl: LoadingController, public storage: Storage, public alertCtrl: AlertController) {
-    this.item = this.navParams.get('crypto');
-    storage.get('favorites').then((val) => {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public DataFactory: ServiceProvider,
+    public loadingCtrl: LoadingController,
+    public storage: Storage,
+    public alertCtrl: AlertController
+  ) {
+    this.item = this.navParams.get("crypto");
+    console.log("this.item: ", this.item);
+    storage.get("favorites").then(val => {
       if (!_.isEmpty(val)) {
         this.favorites = val;
         let res = _.find(this.favorites, { id: this.item.id });
@@ -75,99 +100,134 @@ export class DetailsPage {
   }
 
   ionViewDidLoad() {
-    let loading = this.loadingCtrl.create();
-    loading.present();
-    this.DataFactory.getTickerById(this.item.id).then((data: any) => {
-      if (!_.isEmpty(data) && data.length > 0) {
-        data = data[0];
-        data.daily_volume_usd = data['24h_volume_usd'];
-        data.img = './assets/icon/' + data.symbol + '.png'
-        this.item = data;
+    this.assetHistory = [
+      {
+        data: [],
+        label: ""
       }
-    }, (error) => {
-      // loading.dismiss();
-    }).then(() => {
-      loading.dismiss();
-    });
-
-    this.DataFactory.getChartData(this.actions, this.item.symbol).then((data: any) => {
-      console.log('data: ', data);
-      let datePipe = new DatePipe('en-US');
-      if (!_.isEmpty(data)) {
-        this.showGraph = true;
-        if (data.price && data.price.length > 0) {
-          _.each(data.price, (value: any) => {
-            this.price_data.push(value[1]);
-            this.price_labels.push(datePipe.transform(value[0], 'medium'));
-          });
-          _.each(data.volume, (value: any) => {
-            this.volume_data.push(value[1]);
-            this.volume_labels.push(datePipe.transform(value[0], 'medium'));
-          });
-          _.each(data.market_cap, (value: any) => {
-            this.marketcap_data.push(value[1]);
-            this.marketcap_labels.push(datePipe.transform(value[0], 'medium'));
-          });
-        }
-      }
-    });
+    ];
+    this.initData();
   }
 
-  doRefresh(refresher) {
-    this.DataFactory.getTickerById(this.item.id).then((data: any) => {
-      if (!_.isEmpty(data) && data.length > 0) {
-        data = data[0];
-        data.daily_volume_usd = data['24h_volume_usd'];
-        data.img = './assets/icon/' + data.symbol + '.png'
-        this.item = data;
-      }
-    }, (error) => {
-    }).then(() => {
-
-      this.DataFactory.getChartData(this.actions, this.item.symbol).then((data: any) => {
-        let datePipe = new DatePipe('en-US');
+  private initData(ev?: any) {
+    const loading = this.loadingCtrl.create({
+      dismissOnPageChange: true
+    });
+    loading.present();
+    this.DataFactory.getAssetsById(this.item.id).then(
+      (data: any) => {
         if (!_.isEmpty(data)) {
-          this.showGraph = true;
-          this.price_data = [];
-          this.price_labels = [];
+          this.item = data.data;
+          this.item.icon =
+            "./assets/icons/svg/color/" +
+            _.lowerCase(this.item.symbol) +
+            ".svg";
+        }
+        loading.dismiss();
+        if (ev) {
+          ev.complete();
+        }
+      },
+      error => {
+        console.log("error: ", error);
+        loading.dismiss();
+        if (ev) {
+          ev.complete();
+        }
+      }
+    );
+  }
 
-          this.volume_data = [];
-          this.volume_labels = [];
+  private getAssetHistory(ev?: any) {
+    const loading = this.loadingCtrl.create({
+      dismissOnPageChange: true
+    });
+    loading.present();
+    const datePipe = new DatePipe("en-US");
+    this.DataFactory.getAssetsHistory(this.item.id, this.actions)
+      .then(
+        (data: any) => {
+          if (data && !_.isEmpty(data.data)) {
+            this.assetHistory = [];
+            this.price_data = [];
+            this.price_labels = [];
 
-          this.marketcap_data = [];
-          this.marketcap_labels = [];
-          if (data.price && data.price.length > 0) {
-            _.each(data.price, (value: any) => {
-              this.price_data.push(value[1]);
-              this.price_labels.push(datePipe.transform(value[0], 'medium'));
+            _.each(data.data, (value: any) => {
+              this.price_data.push(parseFloat(value.priceUsd));
+              this.price_labels.push(datePipe.transform(value.date, "medium"));
             });
-            _.each(data.volume, (value: any) => {
-              this.volume_data.push(value[1]);
-              this.volume_labels.push(datePipe.transform(value[0], 'medium'));
+            this.assetHistory.push({
+              data: this.price_data,
+              label: "Series"
             });
-            _.each(data.market_cap, (value: any) => {
-              this.marketcap_data.push(value[1]);
-              this.marketcap_labels.push(datePipe.transform(value[0], 'medium'));
-            });
+            console.log("this.assetHistory: ", this.assetHistory);
+            // console.log("this.price_data: ", this.price_data);
+            // console.log("this.price_labels: ", this.price_labels);
+          }
+          loading.dismiss();
+          if (ev) {
+            ev.complete();
+          }
+        },
+        error => {
+          console.log("error: ", error);
+          loading.dismiss();
+          if (ev) {
+            ev.complete();
           }
         }
+      )
+      .then(() => {
+        this.content.resize();
       });
+  }
 
-      refresher.complete();
+  private getAssetMarkets(ev?: any) {
+    const loading = this.loadingCtrl.create({
+      dismissOnPageChange: true
     });
+    loading.present();
+    this.DataFactory.getAssetsMarkets(this.item.id).then(
+      (data: any) => {
+        if (data && !_.isEmpty(data.data)) {
+          this.assetMarkets = data.data;
+        }
+        loading.dismiss();
+        if (ev) {
+          ev.complete();
+        }
+      },
+      error => {
+        console.log("error: ", error);
+        loading.dismiss();
+        if (ev) {
+          ev.complete();
+        }
+      }
+    );
+  }
+
+  doRefresh(ev) {
+    if (this.mode === "info") {
+      this.initData(ev);
+    } else if (this.mode === "history") {
+      this.getAssetHistory(ev);
+    } else if (this.mode === "markets") {
+      this.getAssetMarkets(ev);
+    }
   }
 
   addToFav(item) {
-    console.log('addToFav: ', item);
+    console.log("addToFav: ", item);
     let res = _.find(this.favorites, { id: item.id });
     if (res) {
       this.favorites = _.reject(this.favorites, { id: item.id });
-      this.storage.set('favorites', this.favorites);
+      this.storage.set("favorites", this.favorites);
       this.isAdded = false;
       let alert = this.alertCtrl.create({
-        title: 'Favorites',
-        subTitle: 'Cryptocurrency remove on favorites!',
-        buttons: ['OK']
+        title: "Favorites",
+        subTitle: "Cryptocurrency remove on favorites!",
+        buttons: ["OK"]
       });
       alert.present();
       return;
@@ -175,48 +235,30 @@ export class DetailsPage {
     this.favorites.push({
       id: item.id
     });
-    this.storage.set('favorites', this.favorites);
+    this.storage.set("favorites", this.favorites);
     this.isAdded = true;
     let alert = this.alertCtrl.create({
-      title: 'Favorites',
-      subTitle: 'Cryptocurrency added as favorites!',
-      buttons: ['OK']
+      title: "Favorites",
+      subTitle: "Cryptocurrency added as favorites!",
+      buttons: ["OK"]
     });
     alert.present();
   }
 
-  segmentChanged(ev) {
-    console.log('val: ', ev.value);
-    let val = ev.value;
-    this.DataFactory.getChartData(val, this.item.symbol).then((data: any) => {
-      let datePipe = new DatePipe('en-US');
-      if (!_.isEmpty(data)) {
-        this.showGraph = true;
-        this.price_data = [];
-        this.price_labels = [];
-
-        this.volume_data = [];
-        this.volume_labels = [];
-
-        this.marketcap_data = [];
-        this.marketcap_labels = [];
-
-        if (data.price && data.price.length > 0) {
-          _.each(data.price, (value: any) => {
-            this.price_data.push(value[1]);
-            this.price_labels.push(datePipe.transform(value[0], 'medium'));
-          });
-          _.each(data.volume, (value: any) => {
-            this.volume_data.push(value[1]);
-            this.volume_labels.push(datePipe.transform(value[0], 'medium'));
-          });
-          _.each(data.market_cap, (value: any) => {
-            this.marketcap_data.push(value[1]);
-            this.marketcap_labels.push(datePipe.transform(value[0], 'medium'));
-          });
-        }
-      }
-    });
+  modeSegmentChanged(ev) {
+    if (this.mode === "info") {
+      this.initData();
+    } else if (this.mode === "history") {
+      this.getAssetHistory();
+    } else if (this.mode === "markets") {
+      this.getAssetMarkets();
+    }
   }
 
+  segmentChanged(ev) {
+    console.log("val: ", ev.value);
+    let val = ev.value;
+    this.actions = val;
+    this.getAssetHistory();
+  }
 }

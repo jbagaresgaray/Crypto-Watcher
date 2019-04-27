@@ -1,13 +1,14 @@
 <ion-menu [content]="content" persistent="true">
-  <ion-header no-border no-line>
-    <ion-toolbar color="richblue">
-      <ion-title></ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content class="richblue">
-    <ion-list no-lines>
-      <ion-item menuClose *ngFor="let p of pages" (click)="openPage(p)" detail-none color="richblue">
-        <ion-icon name="{{p.icon}}" item-left color="{{p.color}}"></ion-icon>
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-avatar">
+        <ion-avatar item-start>
+          <img src="https://i.pinimg.com/originals/b1/bb/ec/b1bbec499a0d66e5403480e8cda1bcbe.png">
+        </ion-avatar>
+        <h2>John Doe</h2>
+      </ion-item>
+      <ion-item no-lines menuClose *ngFor="let p of pages" (click)="openPage(p)" detail-none padding-top>
+        <ion-icon name="{{p.icon}}" item-left></ion-icon>
         {{p.title}}
       </ion-item>
     </ion-list>

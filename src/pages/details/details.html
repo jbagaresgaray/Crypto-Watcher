@@ -13,111 +13,98 @@
       </button>
     </ion-buttons>
   </ion-navbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="mode" color="richblue" (ionChange)="modeSegmentChanged($event)">
+      <ion-segment-button value="info">
+        Info
+      </ion-segment-button>
+      <ion-segment-button value="history">
+        History
+      </ion-segment-button>
+      <ion-segment-button value="markets">
+        Markets
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+  <ion-toolbar padding *ngIf="mode==='history'">
+    <ion-segment [(ngModel)]="actions" color="richblue" (ionChange)="segmentChanged($event)" mode="md">
+      <ion-segment-button value="m1">
+        1M
+      </ion-segment-button>
+      <ion-segment-button value="m15">
+        15M
+      </ion-segment-button>
+      <ion-segment-button value="m30">
+        30M
+      </ion-segment-button>
+      <ion-segment-button value="h1">
+        1H
+      </ion-segment-button>
+      <ion-segment-button value="h6">
+        6H
+      </ion-segment-button>
+      <ion-segment-button value="h12">
+        12H
+      </ion-segment-button>
+      <ion-segment-button value="d1">
+        1D
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
 <ion-content class="card-background-page">
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-card class="info">
-    <div text-center>
-      <!-- <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'"> -->
-      <img src="https://files.coinmarketcap.com/static/img/coins/64x64/{{item.id}}.png" onError="this.src='./assets/imgs/ionic.png'">
+  <div *ngIf="mode === 'info'">
+    <ion-card class="info" padding-bottom>
+      <ion-card-header>
+        <b>{{item.priceUsd | currency:'USD'}}</b>
+      </ion-card-header>
+      <div text-center>
+        <img [src]="item.icon" onError="this.src='./assets/icons/svg/color/generic.svg'">
+      </div>
+      <div class="card-title">{{item.name}}</div>
+      <div class="card-subtitle">{{item.symbol}}</div>
+    </ion-card>
+    <ion-item no-lines *ngIf="item.marketCapUsd !== null">
+      <h2>Market Cap</h2>
+      <ion-note item-end>
+        <span>{{item.marketCapUsd | currency:'USD'}}</span>
+      </ion-note>
+    </ion-item>
+    <ion-item no-lines *ngIf="item.volumeUsd24Hr !== null">
+      <h2>Volume (24h)</h2>
+      <ion-note item-end>
+        <span>{{item.volumeUsd24Hr | currency:'USD'}}</span>
+      </ion-note>
+    </ion-item>
+    <ion-item no-lines *ngIf="item.supply !== null">
+      <h2>Circulating Supply</h2>
+      <ion-note item-end>
+        <span>{{item.supply | number}} {{item.symbol}}</span>
+      </ion-note>
+    </ion-item>
+    <ion-item no-lines *ngIf="item.maxSupply !== null">
+      <h2>Max Supply</h2>
+      <ion-note item-end><span>{{item.maxSupply | number}} {{item.symbol}}</span></ion-note>
+    </ion-item>
+  </div>
+  <div *ngIf="mode === 'history'">
+    <div padding>
+      <canvas baseChart [datasets]="assetHistory" [labels]="price_labels" [options]="lineChartOptions"
+        [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
     </div>
-    <div class="card-title">{{item.name}}</div>
-    <div class="card-subtitle">{{item.symbol}}</div>
-    <ion-row>
-      <ion-col class="borderleft">
-        <h4>Change 1h</h4>
-        <p>
-          <strong class="secondary" *ngIf="item.percent_change_1h > 0">{{item.percent_change_1h}} %</strong>
-          <strong class="danger" *ngIf="item.percent_change_1h < 0">{{item.percent_change_1h}} %</strong>
-        </p>
-      </ion-col>
-      <ion-col class="borderleft">
-        <h4>Change 24h</h4>
-        <p>
-          <strong class="secondary" *ngIf="item.percent_change_24h > 0">{{item.percent_change_24h}} %</strong>
-          <strong class="danger" *ngIf="item.percent_change_24h < 0">{{item.percent_change_24h}} %</strong>
-        </p>
-      </ion-col>
-      <ion-col center text-center>
-        <h4>Change 7d</h4>
-        <p>
-          <strong class="secondary" *ngIf="item.percent_change_7d > 0">{{item.percent_change_7d}} %</strong>
-          <strong class="danger" *ngIf="item.percent_change_7d < 0">{{item.percent_change_7d}} %</strong>
-        </p>
-      </ion-col>
-    </ion-row>
-  </ion-card>
-  <ion-item no-lines *ngIf="item.market_cap_usd !== null">
-    <h2>Market Cap</h2>
-    <ion-note item-end>
-      <span>{{item.market_cap_usd | currency:'USD'}}</span>
-    </ion-note>
-  </ion-item>
-  <ion-item no-lines *ngIf="item.daily_volume_usd !== null">
-    <h2>Volume (24h)</h2>
-    <ion-note item-end>
-      <span>{{item.daily_volume_usd | currency:'USD'}}</span>
-    </ion-note>
-  </ion-item>
-  <ion-item no-lines *ngIf="item.available_supply !== null">
-    <h2>Circulating Supply</h2>
-    <ion-note item-end>
-      <span>{{item.available_supply}} {{item.symbol}}</span>
-    </ion-note>
-  </ion-item>
-  <ion-item no-lines *ngIf="item.max_supply !== null">
-    <h2>Max Supply</h2>
-    <ion-note item-end><span>{{item.max_supply}} {{item.symbol}}</span></ion-note>
-  </ion-item>
-  <ion-list-header color="aquahaze" *ngIf="showGraph">
-    More Information
-  </ion-list-header>
-  <ion-toolbar padding *ngIf="showGraph">
-    <ion-segment [(ngModel)]="actions" color="richblue" (ionChange)="segmentChanged($event)" mode="md">
-      <ion-segment-button value="/1day">
-        1D
-      </ion-segment-button>
-      <ion-segment-button value="/7day">
-        1W
-      </ion-segment-button>
-      <ion-segment-button value="/30day">
-        1M
-      </ion-segment-button>
-      <ion-segment-button value="/90day">
-        3M
-      </ion-segment-button>
-      <ion-segment-button value="/180day">
-        6M
-      </ion-segment-button>
-      <ion-segment-button value="">
-        All
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-  <ion-card *ngIf="showGraph">
-    <ion-card-header>
-      Price
-    </ion-card-header>
-    <ion-card-content>
-      <canvas baseChart [data]="price_data" [labels]="price_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"></canvas>
-    </ion-card-content>
-  </ion-card>
-  <ion-card *ngIf="showGraph">
-    <ion-card-header>
-      Market Cap
-    </ion-card-header>
-    <ion-card-content>
-      <canvas baseChart [data]="marketcap_data" [labels]="marketcap_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
-    </ion-card-content>
-  </ion-card>
-  <ion-card *ngIf="showGraph">
-    <ion-card-header>
-      Volume
-    </ion-card-header>
-    <ion-card-content>
-      <canvas baseChart [data]="volume_data" [labels]="volume_labels" [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
-    </ion-card-content>
-  </ion-card>
+  </div>
+  <ion-list *ngIf="mode === 'markets'" class="market-list">
+    <ion-item *ngFor="let item of assetMarkets">
+      <h2><b>{{item.exchangeId | uppercase}} <span ion-text
+            color="secondary">{{item.priceUsd | currency:'USD'}}</span></b></h2>
+      <p>{{item.volumeUsd24Hr | currency: 'USD'}}</p>
+      <p>{{item.volumePercent | number}} %</p>
+      <ion-note item-end>
+        {{item.baseSymbol}}/{{item.quoteSymbol}}
+      </ion-note>
+    </ion-item>
+  </ion-list>
 </ion-content>

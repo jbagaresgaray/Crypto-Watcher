@@ -18,9 +18,6 @@
       <ion-segment-button value="full">
         Full List
       </ion-segment-button>
-      <ion-segment-button value="global">
-        Global Info
-      </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
 </ion-header>
@@ -28,70 +25,30 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="actions == 'top' || actions == 'full'">
-    <ion-list no-lines>
-      <ion-item-sliding *ngFor="let item of tickerArr">
-        <ion-item (click)="gotoDetails(item)">
-          <ion-avatar item-start>
-            <!-- <img [src]="item.img" onError="this.src='./assets/imgs/ionic.png'"> -->
-            <img src="https://files.coinmarketcap.com/static/img/coins/64x64/{{item.id}}.png" onError="this.src='./assets/imgs/ionic.png'">
-          </ion-avatar>
-          <h2>{{item.name}} <small>({{item.symbol}})</small></h2>
-          <p>{{item.price_usd | currency:'USD'}}</p>
-          <ion-note item-end color="secondary" *ngIf="item.percent_change_24h > 0">
-            <strong>{{item.percent_change_24h}} %</strong>
-          </ion-note>
-          <ion-note item-end color="danger" *ngIf="item.percent_change_24h < 0">
-            <strong>{{item.percent_change_24h}} %</strong>
-          </ion-note>
-          <ion-icon ios="md-arrow-dropup" md="md-arrow-dropup" item-end color="secondary" *ngIf="item.percent_change_24h > 0"></ion-icon>
-          <ion-icon ios="md-arrow-dropdown" md="md-arrow-dropdown" item-end color="danger" *ngIf="item.percent_change_24h < 0"></ion-icon>
-        </ion-item>
-        <ion-item-options side="right">
-          <button ion-button color="aquahaze" click="addToFav(item)">
-            <ion-icon ios="ios-heart" md="ios-heart" color="danger"></ion-icon>
-          </button>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
-  </div>
-  <div *ngIf="actions == 'global'">
-    <div class="hero has-mask ">
-      <div class="content">
-        <div class="avatar"><img src="./assets/icon/BTC.png" width="80"></div>
-        <h2>{{global.bitcoin_percentage_of_market_cap}}%</h2>
-        <h4>Bitcoin Dominance</h4>
-      </div>
-    </div>
-    <ion-item>
-      <div class="row">
-        <div class="col">
-          <strong>Total Market Cap</strong>
-            <br>USD {{global.total_market_cap_usd | number}}
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <strong>Total 24h Volume</strong>
-            <br>USD {{global.total_24h_volume_usd | number}}
-        </div>
-      </div>
-    </ion-item>
-    <ion-item>
-      <div class="row">
-        <div class="col" style="border-right: thin solid #CCC;">
-          <strong>Currencies</strong>
-            <br>{{global.active_currencies}}
-        </div>
-        <div class="col" style="border-right: thin solid #CCC;">
-          <strong>Assets</strong>
-            <br>{{global.active_assets}}
-        </div>
-        <div class="col">
-          <strong>Markets</strong>
-            <br>{{global.active_markets}}
-        </div>
-      </div>
-    </ion-item>
-  </div>
+  <ion-list no-lines>
+    <ion-item-sliding *ngFor="let item of tickerArr">
+      <ion-item (click)="gotoDetails(item)">
+        <ion-avatar item-start>
+          <img [src]="item.icon" onError="this.src='./assets/icons/svg/color/generic.svg'">
+        </ion-avatar>
+        <h2>{{item.name}} <small>({{item.symbol}})</small></h2>
+        <p>{{item.priceUsd | currency:'USD'}}</p>
+        <ion-note item-end color="secondary" *ngIf="item.changePercent24Hr > 0">
+          <small>{{item.changePercent24Hr | number: ''}} %</small>
+        </ion-note>
+        <ion-note item-end color="danger" *ngIf="item.changePercent24Hr < 0">
+          <small>{{item.changePercent24Hr | number: ''}} %</small>
+        </ion-note>
+        <ion-icon ios="md-arrow-dropup" md="md-arrow-dropup" item-end color="secondary"
+          *ngIf="item.changePercent24Hr > 0"></ion-icon>
+        <ion-icon ios="md-arrow-dropdown" md="md-arrow-dropdown" item-end color="danger"
+          *ngIf="item.changePercent24Hr < 0"></ion-icon>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button color="aquahaze" click="addToFav(item)">
+          <ion-icon ios="ios-heart" md="ios-heart" color="danger"></ion-icon>
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>

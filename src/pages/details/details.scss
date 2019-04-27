@@ -4,7 +4,8 @@ page-details {
       font-size: 1.8rem !important;
       font-weight: bold !important;
     }
-    h2{
+
+    h2 {
       font-size: 1.4rem !important;
     }
   }
@@ -12,12 +13,12 @@ page-details {
   ion-card.info {
     padding-top: 10px;
 
-    ion-row{
+    ion-row {
       padding-top: 10px;
     }
   }
 
-  .borderleft{
+  .borderleft {
     border-right: solid 1.4px #757373;
   }
 
@@ -31,6 +32,7 @@ page-details {
 
   ion-note {
     color: #222 !important;
+
     span {
       color: #757373 !important;
       font-weight: bold;
@@ -38,9 +40,17 @@ page-details {
     }
   }
 
+  .market-list ion-note {
+    font-size: 12px;
+    -webkit-align-self: flex-start;
+    -ms-flex-item-align: start;
+    align-self: flex-start;
+    margin-top: 14px;
+  }
+
   ion-card {
-    border: none !important;
-    box-shadow: none !important;
+    // border: none !important;
+    // box-shadow: none !important;
 
     img {
       margin: 0 auto;

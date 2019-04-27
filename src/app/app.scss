@@ -12,7 +12,28 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
-.richblue{
-    background-color: color($colors, richblue);
+.richblue {
+  background-color: color($colors, richblue);
 }
 
+.item-avatar {
+  height: 120px !important;
+  border-bottom: 2px solid color($colors, richblue);
+
+  .item-inner {
+    border-bottom: none !important;
+  }
+
+  ion-avatar {
+    min-width: 46px;
+    min-height: 46px;
+
+    ion-img,
+    img {
+      border-radius: 50%;
+      overflow: hidden;
+      width: 46px;
+      height: 46px;
+    }
+  }
+}
