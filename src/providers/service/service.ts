@@ -38,6 +38,7 @@ export class ServiceProvider {
       _params.offset = param.offset;
     }
 
+    console.log("_params: ", _params);
     return new Promise((resolve, reject) => {
       const callbackResponse = (resp: any) => {
         resolve(resp);
@@ -49,17 +50,11 @@ export class ServiceProvider {
       };
       console.log("environment: ", environment);
 
-      if (this.platform.is("cordova")) {
-        this._http
-          .get(environment.api_url_coincap + "/assets", _params, {})
-          .then(callbackResponse, errorResponse);
-      } else {
-        this.http
-          .get(environment.api_url_coincap + "/assets", {
-            params: _params
-          })
-          .subscribe(callbackResponse, errorResponse);
-      }
+      this.http
+        .get(environment.api_url_coincap + "/assets", {
+          params: _params
+        })
+        .subscribe(callbackResponse, errorResponse);
     });
   }
 
@@ -74,15 +69,9 @@ export class ServiceProvider {
         reject(error);
       };
 
-      if (this.platform.is("cordova")) {
-        this._http
-          .get(environment.api_url_coincap + "/assets/" + id, {}, {})
-          .then(callbackResponse, errorResponse);
-      } else {
-        this.http
-          .get(environment.api_url_coincap + "/assets/" + id, {})
-          .subscribe(callbackResponse, errorResponse);
-      }
+      this.http
+        .get(environment.api_url_coincap + "/assets/" + id, {})
+        .subscribe(callbackResponse, errorResponse);
     });
   }
 
@@ -97,25 +86,13 @@ export class ServiceProvider {
         reject(error);
       };
 
-      if (this.platform.is("cordova")) {
-        this._http
-          .get(
-            environment.api_url_coincap + "/assets/" + id + "/history",
-            {
-              interval: interval
-            },
-            {}
-          )
-          .then(callbackResponse, errorResponse);
-      } else {
-        this.http
-          .get(environment.api_url_coincap + "/assets/" + id + "/history", {
-            params: {
-              interval: interval
-            }
-          })
-          .subscribe(callbackResponse, errorResponse);
-      }
+      this.http
+        .get(environment.api_url_coincap + "/assets/" + id + "/history", {
+          params: {
+            interval: interval
+          }
+        })
+        .subscribe(callbackResponse, errorResponse);
     });
   }
 
@@ -130,19 +107,9 @@ export class ServiceProvider {
         reject(error);
       };
 
-      if (this.platform.is("cordova")) {
-        this._http
-          .get(
-            environment.api_url_coincap + "/assets/" + id + "/markets",
-            {},
-            {}
-          )
-          .then(callbackResponse, errorResponse);
-      } else {
-        this.http
-          .get(environment.api_url_coincap + "/assets/" + id + "/markets", {})
-          .subscribe(callbackResponse, errorResponse);
-      }
+      this.http
+        .get(environment.api_url_coincap + "/assets/" + id + "/markets", {})
+        .subscribe(callbackResponse, errorResponse);
     });
   }
 }
