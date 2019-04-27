@@ -31,7 +31,6 @@
     "@ionic/storage": "^2.2.0",
     "async": "^2.6.0",
     "chart.js": "^2.8.0",
-    "cordova-android": "6.3.0",
     "cordova-browser": "5.0.1",
     "cordova-ios": "5.0.1",
     "cordova-plugin-advanced-http": "2.0.9",
@@ -54,12 +53,13 @@
     "mx.ferreyra.callnumber": "0.0.2",
     "ng2-charts": "^1.6.0",
     "ngx-restangular": "^2.2.3",
+    "randomatic": "^3.0.0",
     "rxjs": "5.5.2",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.18"
   },
   "devDependencies": {
-    "@ionic/app-scripts": "^3.2.2",
+    "@ionic/app-scripts": "^3.2.3",
     "@types/lodash": "^4.14.112",
     "typescript": "^2.9.2"
   },
@@ -80,7 +80,6 @@
     },
     "platforms": [
       "browser",
-      "android",
       "ios"
     ]
   }
